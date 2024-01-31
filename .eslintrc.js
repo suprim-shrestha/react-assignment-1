@@ -6,29 +6,33 @@ module.exports = {
   },
   settings: {
     react: {
-      version: 'detect',
+      version: "detect",
     },
   },
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
   },
-  plugins: ['react', 'react-hooks', 'prettier', '@typescript-eslint'],
+  plugins: ["react", "react-hooks", "prettier", "@typescript-eslint"],
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
-    'plugin:react-hooks/recommended',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
   ],
-  rules: {},
+  rules: {
+    indent: ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    quotes: ["error", "double"],
+    semi: ["error", "always"],
+  },
   globals: {
-    Edit: 'writable',
-    console: 'writable',
-    _: 'writable',
-    $: 'writable',
+    Edit: "writable",
+    console: "writable",
+    _: "writable",
+    $: "writable",
   },
 };

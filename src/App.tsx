@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import logo from './assets/images/logo.svg';
+import { useState } from "react";
+import logo from "./assets/images/logo.svg";
 
 const App = () => {
   const [count, setCount] = useState(0);
@@ -14,11 +14,11 @@ const App = () => {
         />
         <style>
           {
-            '\
+            "\
             .animate-speed{\
               animation-duration:20s;\
             }\
-          '
+          "
           }
         </style>
         <p className="bg-gradient-to-r from-emerald-300 to-sky-300 bg-clip-text text-5xl font-black text-transparent selection:bg-transparent">
@@ -46,7 +46,7 @@ const App = () => {
           >
             Learn React
           </a>
-          {' | '}
+          {" | "}
           <a
             className="text-[#61dafb] transition-all hover:text-blue-400"
             href="https://vitejs.dev/guide/features.html"
