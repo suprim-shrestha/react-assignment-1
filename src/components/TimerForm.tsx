@@ -26,6 +26,7 @@ function TimerForm(props: TimerFormProps) {
         <input
           type="number"
           className="rounded-l px-2 text-black"
+          min={0}
           ref={timerInputRef}
           placeholder="Time in Seconds"
         />
