@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TimerDisplay from "./TimerDisplay";
 import TimerForm from "./TimerForm";
 
@@ -10,6 +10,13 @@ function Timer() {
   const [timer, setTimer] = useState(totalTime.current);
   const [isStarted, setIsStarted] = useState(false);
   const timerInterval = useRef<NodeJS.Timeout>();
+  const resetBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!resetBtnRef.current) return;
+
+    resetBtnRef.current.disabled = true;
+  }, []);
 
   function resetTimer() {
     if (isStarted) return;
@@ -18,8 +25,6 @@ function Timer() {
   }
 
   function startTimer() {
-    if (isStarted) return;
-
     setIsStarted(true);
     timerInterval.current = setInterval(() => {
       setTimer((oldTimer) => {
@@ -32,13 +37,27 @@ function Timer() {
         }
       });
     }, TIMER_INTERVAL);
+
+    if (!resetBtnRef.current) return;
+
+    resetBtnRef.current.disabled = true;
   }
 
   function stopTimer() {
-    if (!isStarted) return;
-
     setIsStarted(false);
     clearInterval(timerInterval.current);
+
+    if (!resetBtnRef.current) return;
+
+    resetBtnRef.current.disabled = false;
+  }
+
+  function toggleTimer() {
+    if (isStarted) {
+      stopTimer();
+    } else {
+      startTimer();
+    }
   }
 
   function updateTimer(newTimer: number) {
@@ -53,23 +72,17 @@ function Timer() {
         <TimerDisplay timer={timer} />
         <div className="my-3 flex flex-row gap-3">
           <button
-            onClick={startTimer}
+            onClick={toggleTimer}
             type="button"
             className="rounded bg-gray-300 px-3 py-2 text-[#282C34] transition-all hover:bg-gray-200"
           >
-            Start
-          </button>
-          <button
-            onClick={stopTimer}
-            type="button"
-            className="rounded bg-gray-300 px-3 py-2 text-[#282C34] transition-all hover:bg-gray-200"
-          >
-            Stop
+            {isStarted ? "Stop" : "Start"}
           </button>
           <button
             onClick={resetTimer}
             type="button"
-            className="rounded bg-gray-300 px-3 py-2 text-[#282C34] transition-all hover:bg-gray-200"
+            className="rounded bg-gray-300 px-3 py-2 text-[#282C34] transition-all hover:bg-gray-200 disabled:cursor-not-allowed disabled:bg-gray-600"
+            ref={resetBtnRef}
           >
             Reset
           </button>
