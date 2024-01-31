@@ -1,7 +1,6 @@
 import { FormEvent, useRef } from "react";
 
 interface TimerFormProps {
-  isStarted: boolean;
   updateTimer: (newTimer: number) => void;
 }
 
@@ -10,8 +9,6 @@ function TimerForm(props: TimerFormProps) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-
-    if (props.isStarted) return;
 
     if (!timerInputRef.current?.value) return;
 
@@ -32,7 +29,7 @@ function TimerForm(props: TimerFormProps) {
         />
         <button
           type="submit"
-          className="rounded-r bg-gray-300 px-3 py-2 text-[#282C34] transition-all hover:bg-gray-200"
+          className="rounded-r bg-[#46c] px-3 py-2 text-[#282C34] transition-all hover:bg-[#73d4fe]"
         >
           Set Timer
         </button>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import TimerDisplay from "./TimerDisplay";
 import TimerForm from "./TimerForm";
 
@@ -10,17 +10,8 @@ function Timer() {
   const [timer, setTimer] = useState(totalTime.current);
   const [isStarted, setIsStarted] = useState(false);
   const timerInterval = useRef<NodeJS.Timeout>();
-  const resetBtnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!resetBtnRef.current) return;
-
-    resetBtnRef.current.disabled = true;
-  }, []);
 
   function resetTimer() {
-    if (isStarted) return;
-
     setTimer(totalTime.current);
   }
 
@@ -37,19 +28,11 @@ function Timer() {
         }
       });
     }, TIMER_INTERVAL);
-
-    if (!resetBtnRef.current) return;
-
-    resetBtnRef.current.disabled = true;
   }
 
   function stopTimer() {
     setIsStarted(false);
     clearInterval(timerInterval.current);
-
-    if (!resetBtnRef.current) return;
-
-    resetBtnRef.current.disabled = false;
   }
 
   function toggleTimer() {
@@ -67,7 +50,7 @@ function Timer() {
 
   return (
     <>
-      <TimerForm isStarted={isStarted} updateTimer={updateTimer} />
+      <TimerForm updateTimer={updateTimer} />
       <div className="timer flex items-center justify-between gap-24 py-3">
         <TimerDisplay timer={timer} />
         <div className="my-3 flex flex-row gap-3">
@@ -81,8 +64,7 @@ function Timer() {
           <button
             onClick={resetTimer}
             type="button"
-            className="rounded bg-gray-300 px-3 py-2 text-[#282C34] transition-all hover:bg-gray-200 disabled:cursor-not-allowed disabled:bg-gray-600"
-            ref={resetBtnRef}
+            className="rounded bg-[#5af44f] px-3 py-2 text-[#282C34] transition-all hover:bg-[#4ca83e]"
           >
             Reset
           </button>
