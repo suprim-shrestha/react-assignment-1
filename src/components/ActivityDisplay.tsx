@@ -1,4 +1,5 @@
 import { ActivityFormData } from "@/interfaces/activity.interface";
+import formatTime from "@/utils/formatTime";
 
 interface ActivityDisplayProps {
   formData: ActivityFormData | null;
@@ -11,7 +12,7 @@ function ActivityDisplay(props: ActivityDisplayProps) {
 
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-gray-200 p-8 text-left text-black">
-      <h2 className="text-xl font-bold">Submitted Data:</h2>
+      <h2 className="text-xl font-bold">User Data:</h2>
       <p>
         <span className="font-bold">Name: </span>
         {formData.user.name}
@@ -36,7 +37,7 @@ function ActivityDisplay(props: ActivityDisplayProps) {
           {formData.activities.map((activity, index) => (
             <tr key={index}>
               <td>{activity.description}</td>
-              <td>{activity.timeSpent}</td>
+              <td>{formatTime(Number(activity.timeSpent))}</td>
             </tr>
           ))}
         </tbody>
