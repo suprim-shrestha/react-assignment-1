@@ -1,3 +1,4 @@
+import { getWeatherData } from "@/services/weather.service";
 import { useEffect, useState } from "react";
 
 type ForecastResponseKeys =
@@ -30,10 +31,7 @@ function Weather() {
 
   async function fetchData() {
     setIsLoading(true);
-    const response = await fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=27.673&longitude=85.43&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m,wind_gusts_10m&format=json&timeformat=unixtime",
-    );
-    const data = await response.json();
+    const data = await getWeatherData();
     setWeatherData({
       data: data.current,
       units: data.current_units,
