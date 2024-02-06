@@ -1,42 +1,42 @@
-import { useState } from "react";
+import {
+  decrement,
+  increment,
+  reset,
+  selectCounterValue,
+} from "@/feature/counter/counterSlice";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 function Counter() {
-  const [count, setCount] = useState(0);
+  const count = useAppSelector(selectCounterValue);
+  const dispatch = useAppDispatch();
 
   return (
     <>
-      <p className="mt-3">
+      <div className="mt-3">
+        <h1 className="text-xl">Count is {count}</h1>
         <button
           type="button"
-          className="my-6 rounded bg-gray-300 px-2 py-2 text-[#282C34] transition-all hover:bg-gray-200"
-          onClick={() => setCount((count) => count + 1)}
+          className="mx-2 my-6 rounded bg-gray-300 px-2 py-2 text-[#282C34] transition-all hover:bg-gray-200"
+          onClick={() => dispatch(increment())}
         >
-          count is: {count}
+          Increment
         </button>
-      </p>
-      <p>
-        Edit <code className="text-[#8d96a7]">App.tsx</code> and save to test
-        HMR updates.
-      </p>
-      <p className="mt-3 flex gap-3 text-center text-[#8d96a7]">
-        <a
-          className="text-[#61dafb] transition-all hover:text-blue-400"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          className="mx-2 my-6 rounded bg-gray-300 px-2 py-2 text-[#282C34] transition-all hover:bg-gray-200"
+          onClick={() => dispatch(decrement())}
         >
-          Learn React
-        </a>
-        {" | "}
-        <a
-          className="text-[#61dafb] transition-all hover:text-blue-400"
-          href="https://vitejs.dev/guide/features.html"
-          target="_blank"
-          rel="noopener noreferrer"
+          Decrement
+        </button>
+        <button
+          type="button"
+          className="mx-2 my-6 rounded bg-gray-300 px-2 py-2 text-[#282C34] transition-all hover:bg-gray-200"
+          onClick={() => dispatch(reset())}
         >
-          Vite Docs
-        </a>
-      </p>
+          Reset
+        </button>
+      </div>
     </>
   );
 }
