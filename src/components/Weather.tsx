@@ -1,55 +1,30 @@
-import { getWeatherData } from "@/services/weather.service";
-import { useEffect, useState } from "react";
-
-type ForecastResponseKeys =
-  | "apparent_temperature"
-  | "cloud_cover"
-  | "interval"
-  | "is_day"
-  | "precipitation"
-  | "pressure_msl"
-  | "rain"
-  | "relative_humidity_2m"
-  | "showers"
-  | "snowfall"
-  | "surface_pressure"
-  | "temperature_2m"
-  | "time"
-  | "weather_code"
-  | "wind_direction_10m"
-  | "wind_gusts_10m"
-  | "wind_speed_10m";
-
-interface ForecastResponse {
-  data: Record<ForecastResponseKeys, number>;
-  units: Record<ForecastResponseKeys, string>;
-}
+import { ForecastResponseKeys } from "@/feature/weather/weather.interface";
+import {
+  fetchWeatherData,
+  selectWeatherData,
+  selectWeatherError,
+  selectWeatherStatus,
+} from "@/feature/weather/weatherSlice";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { useEffect } from "react";
 
 function Weather() {
-  const [weatherData, setWeatherData] = useState<ForecastResponse>();
-  const [isLoading, setIsLoading] = useState(true);
+  const weatherData = useAppSelector(selectWeatherData);
+  const isLoading = useAppSelector(selectWeatherStatus);
+  const errorMessage = useAppSelector(selectWeatherError);
 
-  async function fetchData() {
-    setIsLoading(true);
-    const data = await getWeatherData();
-    setWeatherData({
-      data: data.current,
-      units: data.current_units,
-    });
-    setIsLoading(false);
-  }
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  return (
-    <>
-      <h1 className="mb-5 text-3xl font-bold">Weather</h1>
-      <div className="flex flex-col gap-3">
-        {isLoading
-          ? "Loading..."
-          : weatherData &&
+  function displayData() {
+    if (isLoading === "pending") {
+      return <>Loading...</>;
+    } else if (isLoading === "rejected") {
+      return <>{errorMessage}</>;
+    } else {
+      return (
+        <>
+          {weatherData &&
             Object.keys(weatherData.data).map((key) => {
               const dataKey = key as ForecastResponseKeys;
               if (dataKey !== "time" && dataKey !== "interval") {
@@ -64,7 +39,23 @@ function Weather() {
                 );
               }
             })}
-      </div>
+        </>
+      );
+    }
+  }
+
+  useEffect(() => {
+    async function getData() {
+      dispatch(fetchWeatherData());
+    }
+
+    getData();
+  }, [dispatch]);
+
+  return (
+    <>
+      <h1 className="mb-5 text-3xl font-bold">Weather</h1>
+      <div className="flex flex-col gap-3">{displayData()}</div>
     </>
   );
 }
