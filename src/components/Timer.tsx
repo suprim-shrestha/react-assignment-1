@@ -1,56 +1,61 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import TimerDisplay from "./TimerDisplay";
 import TimerForm from "./TimerForm";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import {
+  selectTimerIsStarted,
+  selectTimerValue,
+  resetTimer,
+  decrement,
+  startTimer,
+  stopTimer,
+  setTimer,
+} from "@/feature/timer/timerSlice";
 
-const DEFAULT_TIMER = 120;
 const TIMER_INTERVAL = 1000;
 
 function Timer() {
-  const totalTime = useRef(DEFAULT_TIMER);
-  const [timer, setTimer] = useState(totalTime.current);
-  const [isStarted, setIsStarted] = useState(false);
   const timerInterval = useRef<NodeJS.Timeout>();
 
-  function resetTimer() {
-    setTimer(totalTime.current);
+  const dispatch = useAppDispatch();
+
+  const timer = useAppSelector(selectTimerValue);
+  const isStarted = useAppSelector(selectTimerIsStarted);
+
+  function handleResetTimer() {
+    dispatch(resetTimer());
+    handleStopTimer();
   }
 
-  function startTimer() {
-    setIsStarted(true);
+  function handleStartTimer() {
+    dispatch(startTimer());
     timerInterval.current = setInterval(() => {
-      setTimer((oldTimer) => {
-        const newTimer = oldTimer - 1;
-        if (newTimer < 0) {
-          stopTimer();
-          return 0;
-        } else {
-          return newTimer;
-        }
-      });
+      dispatch(decrement());
     }, TIMER_INTERVAL);
   }
 
-  function stopTimer() {
-    setIsStarted(false);
+  function handleStopTimer() {
+    dispatch(stopTimer());
     clearInterval(timerInterval.current);
   }
 
   function toggleTimer() {
     if (isStarted) {
-      stopTimer();
+      handleStopTimer();
     } else {
-      startTimer();
+      handleStartTimer();
     }
   }
 
-  function updateTimer(newTimer: number) {
-    totalTime.current = newTimer;
-    resetTimer();
+  function handleUpdateTimer(newTimer: number) {
+    dispatch(setTimer(newTimer));
+    handleResetTimer();
   }
 
   return (
     <>
-      <TimerForm updateTimer={updateTimer} />
+      <TimerForm updateTimer={handleUpdateTimer} />
       <div className="timer flex items-center justify-between gap-24 py-3">
         <TimerDisplay timer={timer} />
         <div className="my-3 flex flex-row gap-3">
@@ -62,7 +67,7 @@ function Timer() {
             {isStarted ? "Stop" : "Start"}
           </button>
           <button
-            onClick={resetTimer}
+            onClick={handleResetTimer}
             type="button"
             className="rounded bg-[#5af44f] px-3 py-2 text-[#282C34] transition-all hover:bg-[#4ca83e]"
           >
