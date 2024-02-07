@@ -1,5 +1,4 @@
-import { getWeatherData } from "@/services/weather.service";
-import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 type ForecastResponseKeys =
   | "apparent_temperature"
@@ -21,49 +20,32 @@ type ForecastResponseKeys =
   | "wind_speed_10m";
 
 interface ForecastResponse {
-  data: Record<ForecastResponseKeys, number>;
-  units: Record<ForecastResponseKeys, string>;
+  current: Record<ForecastResponseKeys, number>;
+  current_units: Record<ForecastResponseKeys, string>;
 }
 
 function Weather() {
-  const [weatherData, setWeatherData] = useState<ForecastResponse>();
-  const [isLoading, setIsLoading] = useState(true);
-
-  async function fetchData() {
-    setIsLoading(true);
-    const data = await getWeatherData();
-    setWeatherData({
-      data: data.current,
-      units: data.current_units,
-    });
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const weatherData = useLoaderData() as ForecastResponse;
 
   return (
     <>
       <h1 className="mb-5 text-3xl font-bold">Weather</h1>
       <div className="flex flex-col gap-3">
-        {isLoading
-          ? "Loading..."
-          : weatherData &&
-            Object.keys(weatherData.data).map((key) => {
-              const dataKey = key as ForecastResponseKeys;
-              if (dataKey !== "time" && dataKey !== "interval") {
-                return (
-                  <div key={key}>
-                    {key
-                      .replace(/_/g, " ")
-                      .replace(/\b\w/g, (char) => char.toUpperCase())}
-                    : {weatherData.data[dataKey]}
-                    {weatherData.units[dataKey]}
-                  </div>
-                );
-              }
-            })}
+        {weatherData &&
+          Object.keys(weatherData.current).map((key) => {
+            const dataKey = key as ForecastResponseKeys;
+            if (dataKey !== "time" && dataKey !== "interval") {
+              return (
+                <div key={key}>
+                  {key
+                    .replace(/_/g, " ")
+                    .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  : {weatherData.current[dataKey]}
+                  {weatherData.current_units[dataKey]}
+                </div>
+              );
+            }
+          })}
       </div>
     </>
   );
